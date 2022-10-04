@@ -20,8 +20,7 @@ class Game:
 
 
         self.score = 0
-        self.win = False
-        self.done = False
+        self.gameover = False
 
     def print_board(self):
         print('Score: ', self.score)
@@ -38,14 +37,17 @@ class Game:
                     empty_tiles.append([row,col])
 
 
-        # pick random tile from the empty tiles
-        random_empty_tile = random.choice(empty_tiles)
-        
-        # Update the board with a two
-        self.board[random_empty_tile[0]][random_empty_tile[1]] = 2
-
+        if empty_tiles:
+            # pick random tile from the empty tiles
+            random_empty_tile = random.choice(empty_tiles)
+            
+            # Update the board with a two
+            self.board[random_empty_tile[0]][random_empty_tile[1]] = 2
 
     def move(self, direction):
+
+        board_before = self.board.copy()
+
         if direction == "up":
             self.move_vertical("up")
             self.merge_vertical("up")
@@ -63,6 +65,13 @@ class Game:
             self.merge_horizontal("right")
             self.move_horizontal("right")
 
+
+        self.calculate_score()
+        self.check_gameover()
+
+        # check if the board has changed
+        if not (board_before == self.board).all():
+            self.add_number_to_board()
 
     def move_vertical(self, direction):
         # Loop through all columns on board
@@ -151,10 +160,14 @@ class Game:
                     self.board[row][col + col_change] = 0
 
     def check_gameover(self):
+    
+        # game is over
+        self.gameover =  True
+
         # Check if there are any zeros on the board
         if 0 in self.board:
             # game is not over if there are still 0s on the board
-            return False
+            self.gameover = False
         
         # Check if there are any adjacent tiles that are the same
         # Loop through each tile on the board, excluding the last row and column. No comparison can be made for the last row and column
@@ -162,23 +175,30 @@ class Game:
             for col in range(self.board.shape[1] - 1):
                 if self.board[row][col] == self.board[row + 1][col]:
                     # gameover if the tile is equal to the tile to the right or below
-                    return True
+                    self.gameover = False
                 if self.board[row][col] == self.board[row][col + 1]:
                     # gameover if the tile is equal to the tile to the right or below
-                    return True
-    
-        # game is not over
-        return False
+                    self.gameover = False
 
 
-# 5x5 test board
-board = np.array([[2,4,16,32,64],[64,32,128,4,2],[2,4,16,32,64],[64,32,128,4,2],[2,4,8,32,64]])
+    def calculate_score(self):
+        # Calculate the sum of all tiles on the board
+        self.score = self.board.sum()
 
-game = Game(5, board)
-print(game.check_gameover())
-# game.print_board()
-# game.move("left")
-# game.print_board()
-# game.print_board()
-# game.move("right")
-# game.print_board()
+
+
+game = Game(5)
+
+possible_moves = ["up", "down", "left", "right"]
+
+# Make 10 random moves
+for i in range(10000):
+    print("Move: ", i)
+    # pick a random move
+    random_move = random.choice(possible_moves)
+    game.move(random_move)
+    game.print_board()
+
+    if game.gameover:
+        print("Gameover!")
+        break
