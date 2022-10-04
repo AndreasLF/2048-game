@@ -24,6 +24,7 @@ class Game:
         self.score = 0
         self.gameover = False
         self.moves = 0
+        self.highest = 2
 
     def print_board(self):
         print('Score: ', self.score)
@@ -188,24 +189,33 @@ class Game:
     def calculate_score(self):
         # Calculate the sum of all tiles on the board
         self.score = self.board.sum()
+        self.highest = self.board.max()
 
 
 
 def game_rollout(game):
+
+
+    name = input("Enter your name: ")
+    print()
+
+
     game.print_board()
     possible_moves = {"w": "up", "s": "down", "a": "left", "d": "right"}
+
 
     # Game loop
     while game.gameover == False:
 
         # take move from user
-        move = input("Enter move (a,s,d,w,exit) and press enter: ")
+        move = input("Enter move (a/s/d/w/exit) and press enter: ")
 
         # If user wants to exit game, exit (break out of game loop)
         if move == "exit":
             quit = input("Are you sure you want to quit? (Y/N):")
             if quit.lower() == "y" or quit.lower() == "yes":
                 print("Game has ended")
+                print("Highest tile: ", game.highest)
                 print("Score: ", game.score)
                 print("Moves: ", game.moves)
                 break
@@ -219,6 +229,7 @@ def game_rollout(game):
             # If the game is over, print the score and moves
             if game.gameover:
                 print("Game over")
+                print("Highest tile: ", game.highest)
                 print("Score: ", game.score)
                 print("Moves: ", game.moves)
             
@@ -226,16 +237,56 @@ def game_rollout(game):
             # If user enters an invalid move, print error message
             print("Please enter valid move")
 
-
-def load_leaderboard(): 
+    # Get current path
     current_path = os.path.dirname(os.path.abspath(__file__))
+
+    # Update the leaderboard file with the new score
+    entry = {"name": name, "highest": int(game.highest), "score": int(game.score), "moves" : int(game.moves)}
+    update_leaderboard(current_path, entry)
+
+    print_leaderboard()
+    
+def load_leaderboard(current_path): 
 
     with open(f"{current_path}\\leaderboard.json", "r") as file:
         leaderboard = json.load(file)
     return leaderboard
 
 
-if __name__ == "__main__":    
+def update_leaderboard(current_path, entry):
+    # Load leaderboard
+    leaderboard_dict = load_leaderboard(current_path)
+    # Append new score
+    leaderboard_dict.append(entry)
+
+    # sort leaderboard by score
+    leaderboard_dict = sorted(leaderboard_dict, key=lambda k: k['highest'], reverse=True)
+    # slice leaderboard to top 5 scores
+    leaderboard_dict = leaderboard_dict[:5]
+
+    # Write to leaderboard file
+    with open(f"{current_path}\\leaderboard.json", "w") as file:
+        json.dump(leaderboard_dict, file, indent=4)
+        file.close()
+
+def print_leaderboard():
+    print()
+    # Leaderboard
+    print("LEADERBOARD")
+    # Laod leaderboard from file
+    current_path = os.path.dirname(os.path.abspath(__file__))
+
+    leaderboard = load_leaderboard(current_path)
+
+    i = 1
+    # Print leaderboard nicely
+    for value in leaderboard:
+        print(f"{i}. {value['name']}, Highest: {value['highest']}, Score: {value['score']}, Moves used: {value['moves']}")
+        i += 1
+    print()
+
+
+if __name__ == "__main__":   
 
     print("Welcome to 2048 (5x5)!")
     print()
@@ -243,11 +294,9 @@ if __name__ == "__main__":
         print("MAIN MENU")
         print("1. Play game")
         print("2. Leaderboard")
-        print("3. Options")
-        print("4. Exit")
+        print("3. Exit")
         print()
-        opt = input("Enter option and press enter (1/2/3/4): ")
-
+        opt = input("Enter option and press enter (1/2/3): ")
 
         if opt == "1":
             print()
@@ -255,25 +304,10 @@ if __name__ == "__main__":
             game = Game(5)
             game_rollout(game)
         elif opt == "2":
-            print()
-            # Leaderboard
-            print("LEADERBOARD")
-            # Laod leaderboard from file
-            leaderboard = load_leaderboard()
-
-            # Print leaderboard nicely
-            for place,value in leaderboard.items():
-                print(f"{place}. {value['name']}, Score: {value['score']}, Moves used: {value['moves']}")
-            print()
-
+            print_leaderboard()
             input("Press any key to return to the main menu: ")
             print()
         elif opt == "3":
-            print()
-            # Options
-            print("Not available yet")
-            print()
-        elif opt == "4":
             quit = input("Are you sure you want to quit? (Y/N):")
             if quit.lower() == "y" or quit.lower() == "yes":
                 print()

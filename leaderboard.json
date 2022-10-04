@@ -1,12 +1,8 @@
-{
-    "1": {
+[
+    {
         "name": "Andreas",
-        "score": 1000,
-        "moves": 10
-    },
-    "2": {
-        "name": "John",
-        "score": 200,
-        "moves": 9
+        "highest": 64,
+        "score": 114,
+        "moves": 56
     }
-}
+]
