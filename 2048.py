@@ -85,7 +85,50 @@ class Game:
                     # Multiply current tile by two (add tiles together)
                     self.board[row][col] *= 2
                     # Set tile below to zero
-                    self.board[row + row_change][col] = 0     
+                    self.board[row + row_change][col] = 0   
+
+    def move_horizontal(self, direction):
+        # Loop through all rows on board
+        for row in range(self.board.shape[0]):
+            non_zero_cols = []   
+            # Loop through all columns and all non zero tiles
+            for col in range(self.board.shape[1]):
+                if self.board[row][col] != 0:
+                    # make list of all non zero rows
+                    non_zero_cols.append(self.board[row][col])
+
+            # append 0s to the end of the list until len is 5
+            while len(non_zero_cols) < self.dim:
+
+                if direction == "left":
+                    non_zero_cols.append(0)
+                elif direction == "right":
+                    non_zero_cols.insert(0, 0)
+
+            non_zero_cols = np.array(non_zero_cols)
+
+            # replace column with non_zero_rows
+            self.board[row,:] = non_zero_cols
+
+    def merge_horizontal(self, direction):
+        # Loop through each columns
+        for row in range(self.board.shape[0]):
+            # Loop through the rows and merge tiles
+
+            if direction == "left":
+                rng = range(self.board.shape[1] - 1)
+            elif direction == "right":
+                rng = range(self.board.shape[1] - 1, 0, -1)
+
+            for col in rng:
+                # if the tile is not zero and the tile above is the same
+                col_change = 1 if direction == "left" else -1
+
+                if self.board[row][col] == self.board[row][col + col_change]:
+                    # Multiply current tile by two (add tiles together)
+                    self.board[row][col] *= 2
+                    # Set tile below to zero
+                    self.board[row][col + col_change] = 0  
 
 
 # 5x5 test board
@@ -93,9 +136,9 @@ board = np.array([[20,0,20,20,0],[20,20,20,0,0],[20,0,10,20,20],[20,10,0,20,0],[
 
 game = Game(5, board)
 game.print_board()
-game.move_vertical("down")
+game.move_horizontal("left")
 game.print_board()
-game.merge_vertical("down")
+game.merge_horizontal("left")
 game.print_board()
-game.move_vertical("down")
+game.move_horizontal("left")
 game.print_board()
