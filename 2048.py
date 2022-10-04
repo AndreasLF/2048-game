@@ -28,7 +28,12 @@ class Game:
 
     def print_board(self):
         print('Score: ', self.score)
-        print(self.board)
+
+        # print the board
+        for row in range(self.board.shape[0]):
+            for col in range(self.board.shape[1]):
+                print(self.board[row][col], end=" ")
+            print()
 
     def add_number_to_board(self):
         import random
@@ -190,7 +195,6 @@ class Game:
         # Calculate the sum of all tiles on the board
         self.score = self.board.sum()
         self.highest = self.board.max()
-
 
 
 def game_rollout(game):
