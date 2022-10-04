@@ -189,40 +189,45 @@ class Game:
 
 
 
-# Define game object
-game = Game(5)
-game.print_board()
 
-possible_moves = {"w": "up", "s": "down", "a": "left", "d": "right"}
 
-# Game loop
-while game.gameover == False:
+def game_rollout(game):
+    game.print_board()
+    possible_moves = {"w": "up", "s": "down", "a": "left", "d": "right"}
 
-    # take move from user
-    move = input("Enter move (a,s,d,w,exit) and press enter: ")
+    # Game loop
+    while game.gameover == False:
 
-    # If user wants to exit game, exit (break out of game loop)
-    if move == "exit":
-        quit = input("Are you sure you want to quit? (Y/N):")
-        if quit.lower() == "y" or quit.lower() == "yes":
-            print("Game has ended")
-            print("Score: ", game.score)
-            print("Moves: ", game.moves)
-            break
+        # take move from user
+        move = input("Enter move (a,s,d,w,exit) and press enter: ")
 
-    # If user enters a valid move, make the move
-    if move in possible_moves:
-        game.move(possible_moves[move])
-        # Print the board
-        game.print_board()
+        # If user wants to exit game, exit (break out of game loop)
+        if move == "exit":
+            quit = input("Are you sure you want to quit? (Y/N):")
+            if quit.lower() == "y" or quit.lower() == "yes":
+                print("Game has ended")
+                print("Score: ", game.score)
+                print("Moves: ", game.moves)
+                break
 
-        # If the game is over, print the score and moves
-        if game.gameover:
-            print("Game over")
-            print("Score: ", game.score)
-            print("Moves: ", game.moves)
-        
-    else: 
-        # If user enters an invalid move, print error message
-        print("Please enter valid move")
+        # If user enters a valid move, make the move
+        if move in possible_moves:
+            game.move(possible_moves[move])
+            # Print the board
+            game.print_board()
 
+            # If the game is over, print the score and moves
+            if game.gameover:
+                print("Game over")
+                print("Score: ", game.score)
+                print("Moves: ", game.moves)
+            
+        else: 
+            # If user enters an invalid move, print error message
+            print("Please enter valid move")
+
+
+
+if __name__ == "__main__":
+    game = Game(5)
+    game_rollout(game)
