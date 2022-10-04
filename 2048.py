@@ -1,5 +1,7 @@
 import numpy as np
 import random
+import os
+import json
 
 # 2048 game
 class Game:
@@ -189,8 +191,6 @@ class Game:
 
 
 
-
-
 def game_rollout(game):
     game.print_board()
     possible_moves = {"w": "up", "s": "down", "a": "left", "d": "right"}
@@ -227,13 +227,20 @@ def game_rollout(game):
             print("Please enter valid move")
 
 
+def load_leaderboard(): 
+    current_path = os.path.dirname(os.path.abspath(__file__))
 
-if __name__ == "__main__":
+    with open(f"{current_path}\\leaderboard.json", "r") as file:
+        leaderboard = json.load(file)
+    return leaderboard
+
+
+if __name__ == "__main__":    
 
     print("Welcome to 2048 (5x5)!")
     print()
     while True:
-        print("Main menu")
+        print("MAIN MENU")
         print("1. Play game")
         print("2. Leaderboard")
         print("3. Options")
@@ -250,7 +257,16 @@ if __name__ == "__main__":
         elif opt == "2":
             print()
             # Leaderboard
-            print("Not available yet")
+            print("LEADERBOARD")
+            # Laod leaderboard from file
+            leaderboard = load_leaderboard()
+
+            # Print leaderboard nicely
+            for place,value in leaderboard.items():
+                print(f"{place}. {value['name']}, Score: {value['score']}, Moves used: {value['moves']}")
+            print()
+
+            input("Press any key to return to the main menu: ")
             print()
         elif opt == "3":
             print()
