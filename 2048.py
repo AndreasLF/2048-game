@@ -45,7 +45,6 @@ class Game:
         self.board[random_empty_tile[0]][random_empty_tile[1]] = 2
 
 
-
     def move(self, direction):
         if direction == "up":
             self.move_vertical("up")
@@ -151,14 +150,35 @@ class Game:
                     # Set tile below to zero
                     self.board[row][col + col_change] = 0
 
+    def check_gameover(self):
+        # Check if there are any zeros on the board
+        if 0 in self.board:
+            # game is not over if there are still 0s on the board
+            return False
+        
+        # Check if there are any adjacent tiles that are the same
+        # Loop through each tile on the board, excluding the last row and column. No comparison can be made for the last row and column
+        for row in range(self.board.shape[0] - 1):
+            for col in range(self.board.shape[1] - 1):
+                if self.board[row][col] == self.board[row + 1][col]:
+                    # gameover if the tile is equal to the tile to the right or below
+                    return True
+                if self.board[row][col] == self.board[row][col + 1]:
+                    # gameover if the tile is equal to the tile to the right or below
+                    return True
+    
+        # game is not over
+        return False
+
 
 # 5x5 test board
-board = np.array([[20,0,20,20,0],[20,20,20,0,0],[20,20,20,20,20],[20,20,0,20,0],[0,0,10,0,0]])
+board = np.array([[2,4,16,32,64],[64,32,128,4,2],[2,4,16,32,64],[64,32,128,4,2],[2,4,8,32,64]])
 
 game = Game(5, board)
-game.print_board()
-game.move("left")
-game.print_board()
-game.print_board()
-game.move("right")
-game.print_board()
+print(game.check_gameover())
+# game.print_board()
+# game.move("left")
+# game.print_board()
+# game.print_board()
+# game.move("right")
+# game.print_board()
