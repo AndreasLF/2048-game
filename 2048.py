@@ -17,7 +17,7 @@ class Game:
         else:
             self.board = board
             self.dim = board.shape[0]
-            
+
 
         self.score = 0
         self.win = False
@@ -43,6 +43,27 @@ class Game:
         
         # Update the board with a two
         self.board[random_empty_tile[0]][random_empty_tile[1]] = 2
+
+
+
+    def move(self, direction):
+        if direction == "up":
+            self.move_vertical("up")
+            self.merge_vertical("up")
+            self.move_vertical("up")
+        elif direction == "down":
+            self.move_vertical("down")
+            self.merge_vertical("down")
+            self.move_vertical("down")
+        elif direction == "left":
+            self.move_horizontal("left")
+            self.merge_horizontal("left")
+            self.move_horizontal("left")
+        elif direction == "right":
+            self.move_horizontal("right")
+            self.merge_horizontal("right")
+            self.move_horizontal("right")
+
 
     def move_vertical(self, direction):
         # Loop through all columns on board
@@ -85,7 +106,7 @@ class Game:
                     # Multiply current tile by two (add tiles together)
                     self.board[row][col] *= 2
                     # Set tile below to zero
-                    self.board[row + row_change][col] = 0   
+                    self.board[row + row_change][col] = 0    
 
     def move_horizontal(self, direction):
         # Loop through all rows on board
@@ -128,17 +149,16 @@ class Game:
                     # Multiply current tile by two (add tiles together)
                     self.board[row][col] *= 2
                     # Set tile below to zero
-                    self.board[row][col + col_change] = 0  
+                    self.board[row][col + col_change] = 0
 
 
 # 5x5 test board
-board = np.array([[20,0,20,20,0],[20,20,20,0,0],[20,0,10,20,20],[20,10,0,20,0],[0,0,10,0,0]])
+board = np.array([[20,0,20,20,0],[20,20,20,0,0],[20,20,20,20,20],[20,20,0,20,0],[0,0,10,0,0]])
 
 game = Game(5, board)
 game.print_board()
-game.move_horizontal("left")
+game.move("left")
 game.print_board()
-game.merge_horizontal("left")
 game.print_board()
-game.move_horizontal("left")
+game.move("right")
 game.print_board()
