@@ -229,5 +229,42 @@ def game_rollout(game):
 
 
 if __name__ == "__main__":
-    game = Game(5)
-    game_rollout(game)
+
+    print("Welcome to 2048 (5x5)!")
+    print()
+    while True:
+        print("Main menu")
+        print("1. Play game")
+        print("2. Leaderboard")
+        print("3. Options")
+        print("4. Exit")
+        print()
+        opt = input("Enter option and press enter (1/2/3/4): ")
+
+
+        if opt == "1":
+            print()
+            # Play game
+            game = Game(5)
+            game_rollout(game)
+        elif opt == "2":
+            print()
+            # Leaderboard
+            print("Not available yet")
+            print()
+        elif opt == "3":
+            print()
+            # Options
+            print("Not available yet")
+            print()
+        elif opt == "4":
+            quit = input("Are you sure you want to quit? (Y/N):")
+            if quit.lower() == "y" or quit.lower() == "yes":
+                print()
+                print("See you soon!")
+                break
+        else:
+            print()
+            print("Invalid option!")
+            print()
+
