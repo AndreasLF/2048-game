@@ -305,7 +305,7 @@ if __name__ == "__main__":
         if opt == "1":
             print()
             # Play game
-            game = Game(5)
+            game = Game(6)
             game_rollout(game)
         elif opt == "2":
             print_leaderboard()
